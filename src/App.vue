@@ -2,8 +2,11 @@
   <HeaderComponent />
   <main>
     <div class="container-main">
-      <AddTransactionForm />
-      <TransactionsList />
+      <div class="container-aside">
+        <AddTransactionForm />
+        <TotalBalanceComponent :total-balance="totalBalance" />
+      </div>
+      <TransactionsList :transaction-list="transactionList" />
     </div>
   </main>
 </template>
@@ -12,6 +15,66 @@
 import HeaderComponent from './components/HeaderComponent.vue'
 import AddTransactionForm from './components/AddTransactionForm.vue'
 import TransactionsList from './components/TransactionsList.vue'
+import TotalBalanceComponent from './components/TotalBalanceComponent.vue'
+import { computed, ref } from 'vue'
+
+const transactionList = ref([
+  {
+    id: 1,
+    description: 'Salário',
+    value: 3000,
+    date: '2022-01-01',
+    month: 'Janeiro',
+    type: 'Entrada',
+  },
+  {
+    id: 2,
+    description: 'Aluguel',
+    value: 1000,
+    date: '2022-01-15',
+    month: 'Janeiro',
+    type: 'Saída',
+  },
+  {
+    id: 3,
+    description: 'Mercado',
+    value: 500,
+    date: '2022-01-20',
+    month: 'Janeiro',
+    type: 'Saída',
+  },
+  {
+    id: 4,
+    description: 'Cartão de Crédito',
+    value: 2500,
+    date: '2022-01-30',
+    month: 'Janeiro',
+    type: 'Saída',
+  },
+])
+
+const totalBalance = computed(() => {
+  return transactionList.value.reduce(
+    (
+      acc: number,
+      transaction: {
+        id: number
+        description: string
+        value: number
+        date: string
+        month: string
+        type: string
+      },
+    ) => {
+      if (transaction.type === 'Entrada') {
+        return acc + transaction.value
+      } else {
+        return acc - transaction.value
+      }
+    },
+    0,
+  )
+})
 </script>
 
 <style scoped>
@@ -26,6 +89,12 @@ main {
     justify-content: space-between;
     width: 80%;
     gap: 50px;
+
+    .container-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
   }
 }
 </style>
