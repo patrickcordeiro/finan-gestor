@@ -4,7 +4,7 @@
       <h3 class="card-data-title">
         {{ props.transaction.description }} - Mês {{ props.transaction.month }}
       </h3>
-      <p class="card-data-value">R$ {{ props.transaction.value }},00</p>
+      <p class="card-data-value">{{ currencyFormated }}</p>
     </div>
 
     <div class="card-type">
@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import formatCurrency from '@/utils/formatCurrency'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -31,6 +32,10 @@ const props = defineProps<{
 const cardColor = computed(() => {
   return props.transaction.type === 'Entrada' ? '#4caf50' : '#f44336'
 })
+
+const currencyFormated = computed(() => {
+  return formatCurrency(props.transaction.value)
+})
 </script>
 
 <style>
@@ -40,7 +45,8 @@ const cardColor = computed(() => {
   align-items: center;
   width: 100%;
   padding: 20px;
-  background-color: rgb(216, 216, 216);
+  cursor: pointer;
+  /* background-color: rgb(216, 216, 216); */
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 
@@ -84,5 +90,9 @@ const cardColor = computed(() => {
       cursor: pointer;
     }
   }
+}
+
+.card:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

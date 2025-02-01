@@ -2,7 +2,7 @@
   <div class="total-balance">
     <div class="balance">
       <h3>Saldo:</h3>
-      <span :style="{ color: balanceColor }">R$ {{ props.totalBalance }},00</span>
+      <span :style="{ color: balanceColor }">{{ currencyFormated }}</span>
     </div>
 
     <p>O valor é referente ao período selecionado</p>
@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import formatCurrency from '@/utils/formatCurrency'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -18,6 +19,10 @@ const props = defineProps<{
 
 const balanceColor = computed(() => {
   return props.totalBalance >= 0 ? 'green' : 'red'
+})
+
+const currencyFormated = computed(() => {
+  return formatCurrency(props.totalBalance)
 })
 </script>
 
