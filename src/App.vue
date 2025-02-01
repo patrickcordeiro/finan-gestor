@@ -54,7 +54,7 @@ const transactionList = ref([
 ])
 
 const totalBalance = computed(() => {
-  return transactionList.value.reduce(
+  const total = transactionList.value.reduce(
     (
       acc: number,
       transaction: {
@@ -74,6 +74,8 @@ const totalBalance = computed(() => {
     },
     0,
   )
+
+  return total
 })
 </script>
 
@@ -86,14 +88,48 @@ main {
 
   .container-main {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    width: 80%;
+    width: 90%;
     gap: 50px;
 
     .container-aside {
       display: flex;
       flex-direction: column;
       gap: 10px;
+    }
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 600px) {
+  main {
+    .container-main {
+      /* flex-direction: row; */
+    }
+  }
+}
+
+/* desktop */
+@media only screen and (min-width: 768px) {
+  main {
+    .container-main {
+    }
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  main {
+    .container-main {
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  main {
+    .container-main {
+      flex-direction: row;
+      width: 80%;
     }
   }
 }

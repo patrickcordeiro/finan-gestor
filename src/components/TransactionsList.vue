@@ -2,6 +2,10 @@
   <div class="container">
     <h1>Resumo Financeiro</h1>
 
+    <div class="without-transactions" v-if="!props.transactionList.length">
+      <p>Você ainda não possui nenhum lançamento</p>
+    </div>
+
     <div
       v-for="transaction in props.transactionList"
       :key="transaction.id"
@@ -36,6 +40,13 @@ const props = defineProps<{
 
   h1 {
     font-size: 24px;
+  }
+
+  .without-transactions {
+    p {
+      font-size: 18px;
+      font-weight: bold;
+    }
   }
 
   .transactions-list {

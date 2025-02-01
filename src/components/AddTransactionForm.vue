@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="transaction-form">
     <form>
       <div class="form-group">
         <label for="description">Descrição</label>
@@ -33,7 +33,7 @@
 form {
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 100%;
   padding: 40px 20px;
   gap: 20px;
   border: 1px solid #ccc;
