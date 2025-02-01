@@ -3,7 +3,7 @@
   <main>
     <div class="container-main">
       <div class="container-aside">
-        <AddTransactionForm />
+        <AddTransactionForm :transaction-list="transactionList" />
         <TotalBalanceComponent :total-balance="totalBalance" />
       </div>
       <TransactionsList :transaction-list="transactionList" />
@@ -102,25 +102,28 @@ main {
 }
 
 /* tablet */
-@media only screen and (min-width: 600px) {
+/* @media only screen and (min-width: 600px) {
   main {
     .container-main {
-      /* flex-direction: row; */
+
     }
   }
-}
+} */
 
 /* desktop */
-@media only screen and (min-width: 768px) {
+/* @media only screen and (min-width: 768px) {
   main {
     .container-main {
     }
   }
-}
+} */
 
 @media only screen and (min-width: 1024px) {
   main {
     .container-main {
+      .container-aside {
+        min-width: 450px;
+      }
     }
   }
 }

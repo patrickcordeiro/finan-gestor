@@ -8,26 +8,86 @@
           name="description"
           id="description"
           placeholder="Digite aqui sua descrição..."
+          v-model="description"
         />
       </div>
 
       <div class="form-group">
         <label for="value">Valor (R$)</label>
-        <input type="text" name="value" id="value" placeholder="0,00" />
+        <input type="text" name="value" id="value" placeholder="0,00" v-model="value" />
       </div>
 
       <div class="form-group">
         <label for="value-type">Tipo de valor</label>
-        <select name="value-type" id="value-type">
+        <select name="value-type" id="value-type" v-model="valueType">
+          <option disabled value="">Selecione o tipo...</option>
           <option value="income">Entrada</option>
           <option value="output">Saída</option>
         </select>
       </div>
 
-      <button type="submit">Adicionar transação</button>
+      <button type="submit" @click="addtransaction">Adicionar transação</button>
     </form>
   </div>
 </template>
+
+<script setup lang="ts">
+import { defineProps, ref } from 'vue'
+
+const props = defineProps<{
+  transactionList: {
+    id: number
+    description: string
+    value: number
+    date: string
+    month: string
+    type: string
+  }[]
+}>()
+
+const description = defineModel('description', {
+  type: String,
+  default: '',
+})
+
+const value = defineModel('value', {
+  type: String,
+  default: '',
+})
+
+const valueType = defineModel('valueType', {
+  type: String,
+  default: '',
+})
+
+const transactionArray = ref(props.transactionList)
+
+const addtransaction = (e: Event) => {
+  e.preventDefault()
+
+  const transaction: {
+    id: number
+    description: string
+    value: number
+    date: string
+    month: string
+    type: string
+  } = {
+    id: props.transactionList.length + 1,
+    description: description.value,
+    value: parseFloat(value.value.replace(',', '.')),
+    date: new Date().toISOString(),
+    month: new Date().toLocaleString('pt-BR', { month: 'long' }),
+    type: valueType.value === 'income' ? 'Entrada' : 'Saída',
+  }
+
+  transactionArray.value.push(transaction)
+
+  description.value = ''
+  value.value = ''
+  valueType.value = ''
+}
+</script>
 
 <style>
 form {
