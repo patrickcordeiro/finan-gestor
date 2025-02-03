@@ -1,13 +1,16 @@
 <template>
   <div class="container">
-    <h1>Resumo Financeiro</h1>
+    <div class="container-header">
+      <h1>Resumo Financeiro</h1>
+      <FiltersTransaction @filter-changed="changeFilterSelected" />
+    </div>
 
     <div class="without-transactions" v-if="!props.transactionList.length">
       <p>Você ainda não possui nenhum lançamento</p>
     </div>
 
     <div
-      v-for="transaction in props.transactionList"
+      v-for="transaction in transactionsFiltered"
       :key="transaction.id"
       class="transactions-list"
     >
@@ -18,6 +21,8 @@
 
 <script setup lang="ts">
 import TransactionCard from './TransactionCard.vue'
+import FiltersTransaction from './FiltersTransaction.vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
   transactionList: {
@@ -29,6 +34,22 @@ const props = defineProps<{
     type: string
   }[]
 }>()
+
+const filterSelected = ref('all')
+const transactionsFiltered = computed(() => {
+  if (filterSelected.value === 'all') return props.transactionList
+  return props.transactionList.filter((transaction) => {
+    const filterValue = filterSelected.value === 'income' ? 'Entrada' : 'Saída'
+
+    if (transaction.type === filterValue) {
+      return transaction
+    }
+  })
+})
+
+const changeFilterSelected = (selected: string) => {
+  filterSelected.value = selected
+}
 </script>
 
 <style>
@@ -38,8 +59,15 @@ const props = defineProps<{
   flex-direction: column;
   gap: 10px;
 
-  h1 {
-    font-size: 24px;
+  .container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+    h1 {
+      font-size: 24px;
+    }
   }
 
   .without-transactions {
