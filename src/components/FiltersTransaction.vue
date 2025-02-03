@@ -52,5 +52,10 @@ const changeFilter = (selected: string) => {
   display: flex;
   gap: 30px;
   justify-content: space-between;
+
+  div {
+    display: flex;
+    gap: 5px;
+  }
 }
 </style>

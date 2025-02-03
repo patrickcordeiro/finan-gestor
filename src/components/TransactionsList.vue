@@ -69,7 +69,7 @@ const deleteCard = (idCard: number) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 0 10px 10px;
 
     h1 {
       font-size: 24px;
