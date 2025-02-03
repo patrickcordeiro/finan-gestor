@@ -5,8 +5,8 @@
       <FiltersTransaction @filter-changed="changeFilterSelected" />
     </div>
 
-    <div class="without-transactions" v-if="!props.transactionList.length">
-      <p>Você ainda não possui nenhum lançamento</p>
+    <div class="without-transactions" v-if="!transactionsFiltered.length">
+      <p>Ops, nada por aqui...</p>
     </div>
 
     <div
@@ -35,20 +35,37 @@ const props = defineProps<{
   }[]
 }>()
 
-const filterSelected = ref('all')
-const transactionsFiltered = computed(() => {
-  if (filterSelected.value === 'all') return props.transactionList
-  return props.transactionList.filter((transaction) => {
-    const filterValue = filterSelected.value === 'income' ? 'Entrada' : 'Saída'
+const typeSelected = ref('all')
+const actualMonth = computed(() => {
+  return new Date().toLocaleString('pt-BR', { month: 'long' })
+})
 
-    if (transaction.type === filterValue) {
+const monthSelected = ref(actualMonth.value)
+
+const transactionsFiltered = computed(() => {
+  if (typeSelected.value === 'all') {
+    return props.transactionList.filter((transaction) => {
+      if (transaction.month.toLowerCase() === monthSelected.value) {
+        return transaction
+      }
+    })
+  }
+
+  const filterValue = typeSelected.value === 'income' ? 'Entrada' : 'Saída'
+
+  return props.transactionList.filter((transaction) => {
+    if (
+      transaction.type === filterValue &&
+      transaction.month.toLowerCase() === monthSelected.value
+    ) {
       return transaction
     }
   })
 })
 
-const changeFilterSelected = (selected: string) => {
-  filterSelected.value = selected
+const changeFilterSelected = ({ type, month }: { type: string; month: string }) => {
+  typeSelected.value = type
+  monthSelected.value = month
 }
 
 const emit = defineEmits(['delete-card'])
@@ -77,6 +94,9 @@ const deleteCard = (idCard: number) => {
   }
 
   .without-transactions {
+    display: flex;
+    align-self: center;
+
     p {
       font-size: 18px;
       font-weight: bold;
