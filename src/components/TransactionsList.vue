@@ -14,7 +14,7 @@
       :key="transaction.id"
       class="transactions-list"
     >
-      <TransactionCard :transaction="transaction" />
+      <TransactionCard :transaction="transaction" @delete-card="deleteCard" />
     </div>
   </div>
 </template>
@@ -49,6 +49,12 @@ const transactionsFiltered = computed(() => {
 
 const changeFilterSelected = (selected: string) => {
   filterSelected.value = selected
+}
+
+const emit = defineEmits(['delete-card'])
+
+const deleteCard = (idCard: number) => {
+  emit('delete-card', idCard)
 }
 </script>
 

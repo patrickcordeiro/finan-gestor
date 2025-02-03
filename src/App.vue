@@ -6,7 +6,7 @@
         <AddTransactionForm :transaction-list="transactionList" />
         <TotalBalanceComponent :total-balance="totalBalance" />
       </div>
-      <TransactionsList :transaction-list="transactionList" />
+      <TransactionsList :transaction-list="transactionList" @delete-card="deleteCard" />
     </div>
   </main>
 </template>
@@ -77,6 +77,10 @@ const totalBalance = computed(() => {
 
   return total
 })
+
+const deleteCard = (idCard: number) => {
+  transactionList.value = transactionList.value.filter((transaction) => transaction.id !== idCard)
+}
 </script>
 
 <style scoped>
