@@ -2,7 +2,7 @@
   <div class="card" :style="{ borderLeft: '5px solid ' + cardColor }">
     <div class="card-data">
       <h3 class="card-data-title">
-        {{ props.transaction.description }} - Mês {{ props.transaction.month }}
+        {{ props.transaction.description }}
       </h3>
       <p class="card-data-value">{{ currencyFormated }}</p>
       <div class="card-type">

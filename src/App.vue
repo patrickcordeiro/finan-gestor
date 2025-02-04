@@ -1,19 +1,17 @@
 <template>
-  <HeaderComponent />
+  <HeaderComponent :total-balance="totalBalance" />
   <main>
     <div class="container-main">
+      <TransactionsList :transaction-list="transactionList" @delete-card="deleteCard" />
       <div class="container-aside">
-        <AddTransactionForm :transaction-list="transactionList" />
         <TotalBalanceComponent :total-balance="totalBalance" />
       </div>
-      <TransactionsList :transaction-list="transactionList" @delete-card="deleteCard" />
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 import HeaderComponent from './components/HeaderComponent.vue'
-import AddTransactionForm from './components/AddTransactionForm.vue'
 import TransactionsList from './components/TransactionsList.vue'
 import TotalBalanceComponent from './components/TotalBalanceComponent.vue'
 import { computed, ref } from 'vue'
@@ -88,7 +86,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 50px 0;
+  padding: 30px 0;
 
   .container-main {
     display: flex;
