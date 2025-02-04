@@ -1,33 +1,35 @@
 <template>
-  <div class="transaction-form">
-    <form>
-      <div class="form-group">
-        <label for="description">Descrição</label>
-        <input
-          type="text"
-          name="description"
-          id="description"
-          placeholder="Digite aqui sua descrição..."
-          v-model="description"
-        />
-      </div>
+  <div class="modal-add-transaction">
+    <div class="transaction-form">
+      <form>
+        <div class="form-group">
+          <label for="description">Descrição</label>
+          <input
+            type="text"
+            name="description"
+            id="description"
+            placeholder="Digite aqui sua descrição..."
+            v-model="description"
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="value">Valor (R$)</label>
-        <input type="text" name="value" id="value" placeholder="0,00" v-model="value" />
-      </div>
+        <div class="form-group">
+          <label for="value">Valor (R$)</label>
+          <input type="text" name="value" id="value" placeholder="0,00" v-model="value" />
+        </div>
 
-      <div class="form-group">
-        <label for="value-type">Tipo de valor</label>
-        <select name="value-type" id="value-type" v-model="valueType">
-          <option disabled value="">Selecione o tipo...</option>
-          <option value="income">Entrada</option>
-          <option value="output">Saída</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="value-type">Tipo de valor</label>
+          <select name="value-type" id="value-type" v-model="valueType">
+            <option disabled value="">Selecione o tipo...</option>
+            <option value="income">Entrada</option>
+            <option value="output">Saída</option>
+          </select>
+        </div>
 
-      <button type="submit" @click="addtransaction">Adicionar transação</button>
-    </form>
+        <button type="submit" @click="addtransaction">Adicionar transação</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -43,6 +45,7 @@ const props = defineProps<{
     month: string
     type: string
   }[]
+  handleModalAddTransaction: (status: boolean) => void
 }>()
 
 const description = defineModel('description', {
@@ -86,49 +89,55 @@ const addtransaction = (e: Event) => {
   description.value = ''
   value.value = ''
   valueType.value = ''
+
+  props.handleModalAddTransaction(false)
 }
 </script>
 
 <style>
-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 40px 20px;
-  gap: 20px;
-  border: 1px solid #ccc;
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    input {
-      padding: 15px;
+.modal-add-transaction {
+  .transaction-form {
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 40px 20px;
+      gap: 20px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f9f9f9;
-    }
 
-    select {
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f9f9f9;
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
 
-      option {
-        padding: 10px;
+        input {
+          padding: 15px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+        }
+
+        select {
+          padding: 15px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+
+          option {
+            padding: 10px;
+          }
+        }
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 15px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
       }
     }
-  }
-
-  button {
-    background-color: #4caf50;
-    color: white;
-    padding: 15px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
   }
 }
 </style>

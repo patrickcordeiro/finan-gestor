@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="!isModalAddtransaction">
     <div class="container-header">
       <h1>Resumo Financeiro</h1>
       <FiltersTransaction @filter-changed="changeFilterSelected" />
@@ -16,12 +16,22 @@
     >
       <TransactionCard :transaction="transaction" @delete-card="deleteCard" />
     </div>
+
+    <button class="add-transaction" @click="isModalAddtransaction = true">
+      Adicionar Transação
+    </button>
   </div>
+  <AddTransactionForm
+    :transaction-list="transactionList"
+    :handleModalAddTransaction="handleModalAddTransaction"
+    v-if="isModalAddtransaction"
+  />
 </template>
 
 <script setup lang="ts">
 import TransactionCard from './TransactionCard.vue'
 import FiltersTransaction from './FiltersTransaction.vue'
+import AddTransactionForm from './AddTransactionForm.vue'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
@@ -35,7 +45,8 @@ const props = defineProps<{
   }[]
 }>()
 
-const typeSelected = ref('all')
+const typeSelected = ref<string>('all')
+const isModalAddtransaction = ref<boolean>(false)
 const actualMonth = computed(() => {
   return new Date().toLocaleString('pt-BR', { month: 'long' })
 })
@@ -66,6 +77,10 @@ const transactionsFiltered = computed(() => {
 const changeFilterSelected = ({ type, month }: { type: string; month: string }) => {
   typeSelected.value = type
   monthSelected.value = month
+}
+
+const handleModalAddTransaction = (status: boolean) => {
+  isModalAddtransaction.value = status
 }
 
 const emit = defineEmits(['delete-card'])
@@ -107,6 +122,16 @@ const deleteCard = (idCard: number) => {
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .add-transaction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
   }
 }
 </style>
