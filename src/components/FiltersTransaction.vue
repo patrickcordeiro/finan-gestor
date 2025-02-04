@@ -97,7 +97,7 @@ const emit = defineEmits(['filter-changed'])
 <style>
 .filters {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   justify-content: space-between;
 
   div {

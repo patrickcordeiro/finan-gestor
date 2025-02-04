@@ -2,7 +2,7 @@
   <div class="container" v-if="!isModalAddtransaction">
     <div class="container-header">
       <h1>Resumo Financeiro</h1>
-      <FiltersTransaction @filter-changed="changeFilterSelected" />
+      <FiltersTransaction @filter-changed="($emit) => emit('change-filters', $emit)" />
     </div>
 
     <div class="without-transactions" v-if="!transactionsFiltered.length">
@@ -21,69 +21,35 @@
       Adicionar Transação
     </button>
   </div>
-  <AddTransactionForm
-    :transaction-list="transactionList"
-    :handleModalAddTransaction="handleModalAddTransaction"
-    v-if="isModalAddtransaction"
-  />
+  <div class="container-form" v-if="isModalAddtransaction">
+    <AddTransactionForm
+      :transaction-list="props.transactionList"
+      :handleModalAddTransaction="handleModalAddTransaction"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import TransactionCard from './TransactionCard.vue'
 import FiltersTransaction from './FiltersTransaction.vue'
 import AddTransactionForm from './AddTransactionForm.vue'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
+import type { ITransaction } from '@/constants/transactions'
 
 const props = defineProps<{
-  transactionList: {
-    id: number
-    description: string
-    value: number
-    date: string
-    month: string
-    type: string
-  }[]
+  transactionList: ITransaction[]
+  transactionsFiltered: ITransaction[]
+  typeSelected: string
+  monthSelected: string
 }>()
 
-const typeSelected = ref<string>('all')
+const emit = defineEmits(['delete-card', 'change-filters'])
+
 const isModalAddtransaction = ref<boolean>(false)
-const actualMonth = computed(() => {
-  return new Date().toLocaleString('pt-BR', { month: 'long' })
-})
-
-const monthSelected = ref(actualMonth.value)
-
-const transactionsFiltered = computed(() => {
-  if (typeSelected.value === 'all') {
-    return props.transactionList.filter((transaction) => {
-      if (transaction.month.toLowerCase() === monthSelected.value) {
-        return transaction
-      }
-    })
-  }
-
-  const filterValue = typeSelected.value === 'income' ? 'Entrada' : 'Saída'
-
-  return props.transactionList.filter((transaction) => {
-    if (
-      transaction.type === filterValue &&
-      transaction.month.toLowerCase() === monthSelected.value
-    ) {
-      return transaction
-    }
-  })
-})
-
-const changeFilterSelected = ({ type, month }: { type: string; month: string }) => {
-  typeSelected.value = type
-  monthSelected.value = month
-}
 
 const handleModalAddTransaction = (status: boolean) => {
   isModalAddtransaction.value = status
 }
-
-const emit = defineEmits(['delete-card'])
 
 const deleteCard = (idCard: number) => {
   emit('delete-card', idCard)
@@ -91,6 +57,12 @@ const deleteCard = (idCard: number) => {
 </script>
 
 <style>
+.container-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .container {
   display: flex;
   width: 100%;
@@ -110,6 +82,8 @@ const deleteCard = (idCard: number) => {
 
   .without-transactions {
     display: flex;
+    align-items: center;
+    min-height: 250px;
     align-self: center;
 
     p {

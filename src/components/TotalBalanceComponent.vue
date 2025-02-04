@@ -1,7 +1,7 @@
 <template>
   <div class="total-balance">
     <div class="balance">
-      <h3>Saldo:</h3>
+      <h3>Saldo {{ props.monthSelected }}:</h3>
       <span :style="{ color: balanceColor }">{{ currencyFormated }}</span>
     </div>
 
@@ -15,6 +15,8 @@ import { computed } from 'vue'
 
 const props = defineProps<{
   totalBalance: number
+  monthSelected: string
+  typeSelected: string
 }>()
 
 const balanceColor = computed(() => {

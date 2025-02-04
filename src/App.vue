@@ -1,10 +1,21 @@
 <template>
-  <HeaderComponent :total-balance="totalBalance" />
+  <HeaderComponent :total-balance="totalBalanceAccount" />
   <main>
     <div class="container-main">
-      <TransactionsList :transaction-list="transactionList" @delete-card="deleteCard" />
+      <TransactionsList
+        :transaction-list="transactionList"
+        :month-selected="monthSelected"
+        :type-selected="typeSelected"
+        :transactions-filtered="transactionsFiltered"
+        @delete-card="deleteCard"
+        @change-filters="changeFilterSelected"
+      />
       <div class="container-aside">
-        <TotalBalanceComponent :total-balance="totalBalance" />
+        <TotalBalanceComponent
+          :total-balance="totalBalanceFiltered"
+          :month-selected="monthSelected"
+          :type-selected="typeSelected"
+        />
       </div>
     </div>
   </main>
@@ -15,44 +26,12 @@ import HeaderComponent from './components/HeaderComponent.vue'
 import TransactionsList from './components/TransactionsList.vue'
 import TotalBalanceComponent from './components/TotalBalanceComponent.vue'
 import { computed, ref } from 'vue'
+import { transactions } from './constants/transactions'
 
-const transactionList = ref([
-  {
-    id: 1,
-    description: 'Salário',
-    value: 3000,
-    date: '2022-01-01',
-    month: 'Janeiro',
-    type: 'Entrada',
-  },
-  {
-    id: 2,
-    description: 'Aluguel',
-    value: 1000,
-    date: '2022-01-15',
-    month: 'Janeiro',
-    type: 'Saída',
-  },
-  {
-    id: 3,
-    description: 'Mercado',
-    value: 500,
-    date: '2022-01-20',
-    month: 'Janeiro',
-    type: 'Saída',
-  },
-  {
-    id: 4,
-    description: 'Cartão de Crédito',
-    value: 2500,
-    date: '2022-01-30',
-    month: 'Janeiro',
-    type: 'Saída',
-  },
-])
+const transactionList = ref(transactions)
 
-const totalBalance = computed(() => {
-  const total = transactionList.value.reduce(
+const totalBalanceAccount = computed(() => {
+  return transactionList.value.reduce(
     (
       acc: number,
       transaction: {
@@ -72,8 +51,62 @@ const totalBalance = computed(() => {
     },
     0,
   )
+})
 
-  return total
+const actualMonth = computed(() => {
+  return new Date().toLocaleString('pt-BR', { month: 'long' })
+})
+
+const monthSelected = ref(actualMonth.value)
+const typeSelected = ref<string>('all')
+
+const changeFilterSelected = (filters: { type: string; month: string }) => {
+  typeSelected.value = filters.type
+  monthSelected.value = filters.month
+}
+
+const transactionsFiltered = computed(() => {
+  if (typeSelected.value === 'all') {
+    return transactionList.value.filter((transaction) => {
+      if (transaction.month.toLowerCase() === monthSelected.value) {
+        return transaction
+      }
+    })
+  }
+
+  const filterValue = typeSelected.value === 'income' ? 'Entrada' : 'Saída'
+
+  return transactionList.value.filter((transaction) => {
+    if (
+      transaction.type === filterValue &&
+      transaction.month.toLowerCase() === monthSelected.value
+    ) {
+      return transaction
+    }
+  })
+})
+
+const totalBalanceFiltered = computed(() => {
+  return transactionsFiltered.value.reduce(
+    (
+      acc: number,
+      transaction: {
+        id: number
+        description: string
+        value: number
+        date: string
+        month: string
+        type: string
+      },
+    ) => {
+      if (transaction.type === 'Entrada') {
+        return acc + transaction.value
+      } else {
+        return acc - transaction.value
+      }
+    },
+    0,
+  )
 })
 
 const deleteCard = (idCard: number) => {

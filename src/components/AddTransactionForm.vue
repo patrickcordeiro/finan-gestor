@@ -1,6 +1,9 @@
 <template>
   <div class="modal-add-transaction">
     <div class="transaction-form">
+      <div class="close-modal">
+        <button @click="props.handleModalAddTransaction(false)">X</button>
+      </div>
       <form>
         <div class="form-group">
           <label for="description">Descrição</label>
@@ -36,17 +39,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = defineProps<{
+const props = defineProps({
   transactionList: {
-    id: number
-    description: string
-    value: number
-    date: string
-    month: string
-    type: string
-  }[]
-  handleModalAddTransaction: (status: boolean) => void
-}>()
+    type: Object,
+    required: true,
+  },
+  handleModalAddTransaction: {
+    type: Function,
+    required: true,
+  },
+})
 
 const description = defineModel('description', {
   type: String,
@@ -96,14 +98,31 @@ const addtransaction = (e: Event) => {
 
 <style>
 .modal-add-transaction {
+  border: 1px solid #ccc;
+
   .transaction-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+
+    .close-modal {
+      align-self: flex-end;
+
+      button {
+        border: none;
+        background-color: transparent;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
+
     form {
       display: flex;
       flex-direction: column;
       width: 100%;
-      padding: 40px 20px;
+      padding: 0 10px 20px;
       gap: 20px;
-      border: 1px solid #ccc;
 
       .form-group {
         display: flex;
