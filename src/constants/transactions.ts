@@ -5,6 +5,8 @@ export interface ITransaction {
   date: string
   month: string
   type: string
+  is_paid: boolean
+  due_date?: string
 }
 
 export const transactions: ITransaction[] = [
@@ -15,6 +17,7 @@ export const transactions: ITransaction[] = [
     date: '2022-01-01',
     month: 'Janeiro',
     type: 'Entrada',
+    is_paid: true,
   },
   {
     id: 2,
@@ -23,6 +26,8 @@ export const transactions: ITransaction[] = [
     date: '2022-01-15',
     month: 'Janeiro',
     type: 'Saída',
+    is_paid: true,
+    due_date: '2022-01-15',
   },
   {
     id: 3,
@@ -31,6 +36,8 @@ export const transactions: ITransaction[] = [
     date: '2022-01-20',
     month: 'Janeiro',
     type: 'Saída',
+    due_date: '2022-01-20',
+    is_paid: false,
   },
   {
     id: 4,
@@ -39,5 +46,7 @@ export const transactions: ITransaction[] = [
     date: '2022-01-30',
     month: 'Janeiro',
     type: 'Saída',
+    due_date: '2022-01-30',
+    is_paid: false,
   },
 ]

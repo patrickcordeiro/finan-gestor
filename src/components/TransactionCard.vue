@@ -10,50 +10,50 @@
       </div>
     </div>
 
-    <button class="card-delete" @click="() => emit('delete-card', props.transaction.id)">
-      <svg
-        fill="#000000"
-        version="1.1"
-        id="Capa_1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 0 490.646 490.646"
-        xml:space="preserve"
-        width="18"
-        height="18"
-      >
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-        <g id="SVGRepo_iconCarrier">
-          <g>
+    <div class="options">
+      <button class="card-delete" @click="() => emit('delete-card', props.transaction.id)">
+        <svg
+          fill="#000000"
+          version="1.1"
+          id="Capa_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 490.646 490.646"
+          xml:space="preserve"
+          width="18"
+          height="18"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
             <g>
-              <path
-                d="M399.179,67.285l-74.794,0.033L324.356,0L166.214,0.066l0.029,67.318l-74.802,0.033l0.025,62.914h307.739L399.179,67.285z M198.28,32.11l94.03-0.041l0.017,35.262l-94.03,0.041L198.28,32.11z"
-              ></path>
-              <path
-                d="M91.465,490.646h307.739V146.359H91.465V490.646z M317.461,193.372h16.028v250.259h-16.028V193.372L317.461,193.372z M237.321,193.372h16.028v250.259h-16.028V193.372L237.321,193.372z M157.18,193.372h16.028v250.259H157.18V193.372z"
-              ></path>
+              <g>
+                <path
+                  d="M399.179,67.285l-74.794,0.033L324.356,0L166.214,0.066l0.029,67.318l-74.802,0.033l0.025,62.914h307.739L399.179,67.285z M198.28,32.11l94.03-0.041l0.017,35.262l-94.03,0.041L198.28,32.11z"
+                ></path>
+                <path
+                  d="M91.465,490.646h307.739V146.359H91.465V490.646z M317.461,193.372h16.028v250.259h-16.028V193.372L317.461,193.372z M237.321,193.372h16.028v250.259h-16.028V193.372L237.321,193.372z M157.18,193.372h16.028v250.259H157.18V193.372z"
+                ></path>
+              </g>
             </g>
           </g>
-        </g>
-      </svg>
-    </button>
+        </svg>
+      </button>
+
+      <span :style="{ color: props.transaction.is_paid ? '#4caf50' : '#f44336' }">{{
+        status
+      }}</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { ITransaction } from '@/constants/transactions'
 import formatCurrency from '@/utils/formatCurrency'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  transaction: {
-    id: number
-    description: string
-    value: number
-    date: string
-    month: string
-    type: string
-  }
+  transaction: ITransaction
 }>()
 
 const cardColor = computed(() => {
@@ -62,6 +62,16 @@ const cardColor = computed(() => {
 
 const currencyFormated = computed(() => {
   return formatCurrency(props.transaction.value)
+})
+
+const status = computed(() => {
+  let status = 'Pendente'
+
+  if (props.transaction.is_paid) {
+    status = props.transaction.type === 'Entrada' ? 'Recebido' : 'Pago'
+  }
+
+  return status
 })
 
 const emit = defineEmits(['delete-card'])
@@ -110,15 +120,22 @@ const emit = defineEmits(['delete-card'])
     }
   }
 
-  button {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    align-self: flex-start;
-  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    height: 100%;
+    justify-content: space-between;
 
-  button:hover {
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    button {
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+
+    button:hover {
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
   }
 }
 
